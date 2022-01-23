@@ -34,7 +34,7 @@ Get options would not have the URL or method, I wouldn't expect the parent funct
 Ideally the workflow doing the search doesn't know or care where the search data is coming from,
 so the start of the search workflow would be:
 `searchForSomething(value: string): Promise<SomeDataObj>`
-which eventually makes a call to: `makeApiCall<T>(options: HttpOptions) Promise<T>`
+which eventually makes a call to: `makeApiCall<T>(options: HttpOptions, body?: any) Promise<T>`
 where `HttpOptions` has options to add headers, url, httpMethod type, ect. And `T` is the expected response object after extracting the response data.
 
 If we need it to use callbacks the function might look something like:
