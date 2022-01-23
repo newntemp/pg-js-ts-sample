@@ -1,0 +1,6 @@
+node_modules
+dist
+docker-volume
+.vscode
+.npm
+.env
