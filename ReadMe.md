@@ -28,14 +28,20 @@ The code is in: `lib/ObjectStoreParser.js`
 The original signature is: `search(value: string, store: IObjectStore): string[]`
 
 If it's a static function:
-`search(url: string, value: string, options?: GetOptions): Promise<string[]>`
-
-If it's in a class who's responsibility is communicating with the api i would want the url information
-injected and the signature to look like:
 `search(value: string, options?: GetOptions): Promise<string[]>`
+Get options would not have the URL or method, I wouldn't expect the parent function to know that info.
+
+Ideally the workflow doing the search doesn't know or care where the search data is coming from,
+so the start of the search workflow would be:
+`searchForSomething(value: string): Promise<SomeDataObj>`
+which eventually makes a call to: `makeApiCall<T>(options: HttpOptions) Promise<T>`
+where `HttpOptions` has options to add headers, url, httpMethod type, ect. And `T` is the expected response object after extracting the response data.
+
+If we need it to use callbacks the function might look something like:
+`makeApiCall(successCallback:() => any, failureCallback: () => any, options: HttpOptions)`
 
 
 Either way the request can be parsed for failure statuses and throw an error, that way error handling for
 a bad request, response, server failure, timeout, etc. can be included in the parent's error handling.
-The parent function can use a try catch if it's async, or .catch to receive the errors from the api call.
+The parent function can use a try catch if it's async/await, or .catch callback to receive the errors from the api call.
 It could retry based on the type of error or inform the user of a problem.
